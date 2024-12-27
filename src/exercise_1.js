@@ -1,5 +1,5 @@
 /**
- * Write a function to check if a string is empty 
+ * Write a function to check if a string is empty
  * @param {String} text
  * @returns {Boolean}
  * @example
@@ -9,26 +9,31 @@
  * isStringEmpty(); => throws error "text must be defined"
  */
 function isStringEmpty(text) {
-  // Your code here
+  if (text === undefined) throw new Error("text must be defined");
+  return text.trim().length === 0;
 }
 
 /**
  * Write a function to truncate text
- * @param {String} text 
+ * @param {String} text
  * @param {Number} numberOfCharacters
- * @returns {String} 
+ * @returns {String}
  * @example
  * truncateString('Hello World', 2); => 'He'
  * truncateString('Hello world'); => throws error "Please specify number of characters to extract"
  * truncateString(''); => throws error "text must have at least one character"
  */
 function truncateString(text, numberOfCharacters) {
-  // Your code here
+  if (!text || text.length === 0)
+    throw new Error("text must have at least one character");
+  if (numberOfCharacters === undefined)
+    throw new Error("Please specify number of characters to extract");
+  return text.slice(0, numberOfCharacters);
 }
 
 /**
  * Write a function to create social media post hash tag
- * @param {String} text 
+ * @param {String} text
  * @returns {String}
  * @example
  * createHashTag('Hello World'); => '#helloWorld'
@@ -38,12 +43,24 @@ function truncateString(text, numberOfCharacters) {
  * createHashTag('   '); => throws error "Text should have at least three characters"
  */
 function createHashTag(text) {
-  // Your code here
+  if (!text || text.trim().length < 3)
+    throw new Error("Text should have at least three characters");
+  return (
+    "#" +
+    text
+      .trim()
+      .toLowerCase()
+      .split(" ")
+      .map((word, index) =>
+        index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .join("")
+  );
 }
 
 /**
  * Write a function to format phone number as '+998 99 777 66 55'
- * @param {Number} phoneNumber 
+ * @param {Number} phoneNumber
  * @returns {String}
  * @throws {Error} 'Phone number must be either 9 or 12 characters long'
  * @example
@@ -54,22 +71,51 @@ function createHashTag(text) {
  * formatPhoneNumber(); => throws error "Phone number must be either 9 or 12 characters long"
  */
 function formatPhoneNumber(phoneNumber) {
-  // Your code here
+  const phoneString = String(phoneNumber);
+  if (phoneString.length === 9) {
+    return `+998 ${phoneString.slice(0, 2)} ${phoneString.slice(
+      2,
+      5
+    )} ${phoneString.slice(5, 7)} ${phoneString.slice(7)}`;
+  } else if (phoneString.length === 12) {
+    return `+${phoneString.slice(0, 3)} ${phoneString.slice(
+      3,
+      5
+    )} ${phoneString.slice(5, 8)} ${phoneString.slice(
+      8,
+      10
+    )} ${phoneString.slice(10)}`;
+  }
+  throw new Error("Phone number must be either 9 or 12 characters long");
 }
 
 /**
  * Write a function that transforms text to different cases
- * @param {String} text 
+ * @param {String} text
  * @param {'camel'|'kebab'|'snake'} caseName - 'camel', 'kebab', 'snake'
  * @returns {String}
  * @example
  * changeTextCase('Hello World', 'camel'); => 'helloWorld'
  * changeTextCase('Hello World', 'kebab'); => 'hello-world'
  * changeTextCase('Hello World', 'snake'); => 'hello_world'
- * 
+ *
  */
 function changeTextCase(text, caseName) {
-  // Your code here
+  const words = text.toLowerCase().split(" ");
+  switch (caseName) {
+    case "camel":
+      return words
+        .map((word, index) =>
+          index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
+        )
+        .join("");
+    case "kebab":
+      return words.join("-");
+    case "snake":
+      return words.join("_");
+    default:
+      throw new Error("Unsupported case format");
+  }
 }
 
 /**
@@ -86,12 +132,13 @@ function changeTextCase(text, caseName) {
  * 'Winnie-the-Puff (also known as Edward Bear, Puff Bear or simply Puff) is a fictional anthropomorphic teddy bear created by English author A. A. Milne and English illustrator E. H. Shepard. Winnie-the-Puff first appeared by name in a children's story commissioned by London's Evening News for Christmas Eve 1925. The character is inspired by a stuffed toy that Milne had bought for his son Christopher Robin in Harrods department store, and a bear they had viewed at London Zoo.'
  */
 function replaceWordInText(text, word, replacement) {
-  // Your code here
+  const regex = new RegExp(word, "g");
+  return text.replace(regex, replacement);
 }
 
 /**
  * Write a function to extract price in number format from the text
- * @param {String} text 
+ * @param {String} text
  * @returns {Number}
  * @example
  * extractPriceFromText('Apple price in market is $2.32 per kg now'); => 2.32
@@ -99,7 +146,11 @@ function replaceWordInText(text, word, replacement) {
  * extractPriceFromText('There were no apples left in the shop'); => 'No matching price was found'
  */
 function extractPriceFromText(text) {
-  // Your code here
+  const match = text.match(/\$(\d+(\.\d+)?)/);
+  if (match) {
+    return parseFloat(match[1]);
+  }
+  return "No matching price was found";
 }
 
 module.exports = {
@@ -109,5 +160,5 @@ module.exports = {
   isStringEmpty,
   replaceWordInText,
   truncateString,
-  formatPhoneNumber
-}
+  formatPhoneNumber,
+};
