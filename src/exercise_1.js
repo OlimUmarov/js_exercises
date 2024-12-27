@@ -90,7 +90,6 @@ function formatPhoneNumber(phoneNumber) {
 }
 
 /**
- * Write a function that transforms text to different cases
  * @param {String} text
  * @param {'camel'|'kebab'|'snake'} caseName - 'camel', 'kebab', 'snake'
  * @returns {String}
